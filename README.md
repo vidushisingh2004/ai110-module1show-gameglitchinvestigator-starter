@@ -25,9 +25,9 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] **Purpose:** A Streamlit number-guessing game. You pick a difficulty, guess the secret number, and get hints and a score. The starter code was AI-generated and full of bugs.
+- [x] **Bugs found:** backwards hints (Too High said "Go HIGHER"), the secret was converted to a string on every other attempt so comparisons were wrong, and the hint disappeared when the "Show hint" checkbox was toggled and never came back.
+- [x] **Fixes applied:** moved `check_guess` into `logic_utils.py` and swapped the high/low messages, always compare against the integer secret, and store the latest hint in `st.session_state.last_hint` so it is redrawn whenever the checkbox is on. Added pytest regression tests in `tests/test_game_logic.py`.
 
 ## 📸 Demo Walkthrough
 
@@ -44,9 +44,9 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+$ python -m pytest -q
+.....                                                                    [100%]
+5 passed in 0.01s
 ```
 
 ## 🚀 Stretch Features
