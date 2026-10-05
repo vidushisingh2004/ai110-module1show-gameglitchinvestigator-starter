@@ -39,8 +39,8 @@ Document at least 3 bugs you found. Add rows as needed.
 
 - Give one example of an AI suggestion you did not accept as written (including what the AI suggested, why you rejected or changed it, and how you verified your version). It does not have to be a suggestion that was wrong: over-engineered, out of scope, harder to read, or a poor fit for this codebase all count.
 
-* **Correct suggestion:** The AI found that the hint button problem had two causes. The hint was only drawn inside `if submit:`, so toggling the checkbox (which reruns the script with `submit = False`) erased it. Also, `app.py` turned the secret into a string on every even attempt, which made `check_guess` compare strings. It suggested saving the hint in `st.session_state.last_hint` and drawing it outside the submit block, and always passing the integer secret. This was correct because it matches how Streamlit reruns work. I checked it by reading the diff and by new pytest cases for the hint text.
-* **Suggestion I did not accept as written:** The AI edited `app.py` directly to fix the bugs. I wanted to understand the fixes first, so I had it undo them and explain each one with the code. I then asked for the fixes to be applied once I understood them. The AI also left the string-comparison `except TypeError` fallback in `check_guess` at first. That was a poor fit once the secret was always an int, so we removed it when moving the function into `logic_utils.py`.
+* **Correct:** The AI said to save the hint in session state and show it outside the submit block. That fixed the hint button because toggling the checkbox reruns the page. I checked it by reading the diff and running the tests.
+* **Not accepted as written:** The AI edited my code directly. I wanted to understand it first, so I had it undo the edits and explain them, then apply them.
 
 ---
 
@@ -48,16 +48,16 @@ Document at least 3 bugs you found. Add rows as needed.
 
 - How did you decide whether a bug was really fixed?
 
-I decided a bug was fixed when a test that failed before the change passed after it, and when the behavior matched what the code now says. For the high/low bug, a guess of 60 against a secret of 50 must return "Too High" with a "Go LOWER" message.
+A bug is fixed when its test passes. A guess of 60 against a secret of 50 should say "Too High" and "Go LOWER".
 
 - Describe at least one test you ran (manual or using pytest)  
   and what it showed you about your code.
 
-I ran `python -m pytest -q` and got 5 passed. The starter tests compared the whole return value to a string, but `check_guess` returns an `(outcome, message)` tuple. I changed them to check the outcome, and added two regression tests that check the hint text ("LOWER" for a too-high guess, "HIGHER" for a too-low guess). I could not run `streamlit run app.py` here because the local Streamlit install is broken (a pyarrow/protobuf mismatch), so the toggle fix still needs a manual check in the live game.
+I ran `python -m pytest -q` and got 5 passed. I fixed the starter tests and added two for the hint text. I couldn't run the live game here, so the checkbox fix still needs a manual check.
 
 - Did AI help you design or understand any tests? How?
 
-Yes. Claude Code noticed that the starter tests did not match the function's return type, and it wrote the regression tests. It also explained why the string comparison on even attempts gave wrong results (for example, `"9" > "10"` is `True`).
+Yes. Claude Code wrote the hint tests and explained why comparing strings gave wrong results.
 
 ---
 
